@@ -4,7 +4,7 @@ import { UserManager } from "https://cdn.jsdelivr.net/npm/oidc-client-ts@2.0.3/+
 const cognitoAuthConfig = {
     authority: "https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_3pvC4DEG1",
     client_id: "22j935nr3cusdmb2vshjrimvj8",
-    redirect_uri: "https://main.d1o7orvs7bwkpi.amplifyapp.com/PanelAdmin.html",
+    redirect_uri: "https://main.d1o7orvs7bwkpi.amplifyapp.com/PanelUser.html",
     response_type: "code",
     scope: "email openid phone"
 };
