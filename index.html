@@ -1,22 +1,36 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wykresy Cen Akcji</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Login with AWS Cognito</h1>
-    <div>
+   
+   <header class="top-bar" id="header">
+        <h1>Mass Email Service</h1>
+        <div class= "outside">
+            <div class= "inside">
+                <button id="login-btn" onclick="window.location.href='login.html'">Wyloguj się</button>
+            </div>
+        </div>
+    </header>
+    <main>
+    <h1>Zaloguj się</h1>
+        <div>
         <button id="signIn">Sign In</button>
-    </div>
+        </div>
 
-    <script type="module">
+        <script type="module">
         import { userManager } from "./main.js";
 
         document.getElementById("signIn").addEventListener("click", async () => {
-            await userManager.signinRedirect();
+        await userManager.signinRedirect();
         });
-    </script>
+        </script>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>
