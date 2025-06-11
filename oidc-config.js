@@ -1,4 +1,4 @@
-import { UserManager } from "oidc-client-ts";
+import { UserManager } from "https://cdn.jsdelivr.net/npm/oidc-client-ts@2.0.3/+esm";
 
 const cognitoAuthConfig = {
     authority: "https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_3pvC4DEG1",
