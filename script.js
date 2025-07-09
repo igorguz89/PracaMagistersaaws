@@ -52,32 +52,34 @@ saveUser.onclick = () => {
     alert("Wszystkie pola są wymagane.");
   }
 
-  // utwórz obiekt nagłówków
-  var myHeaders = new Headers();
-  // dodaj nagłówek typu zawartości do obiektu
-  myHeaders.append("Content-Type", "application/json");
-  // korzystając z wbudowanego pakietu narzędzi JSON, zmień obiekt na ciąg i zapisz w zmiennej
-  var raw = JSON.stringify({
-    email: email,
-    firstName: fname,
-    lastName: fname,
-  });
+  var callAPI = (firstName, lastName, email) => {
+    // utwórz obiekt nagłówków
+    var myHeaders = new Headers();
+    // dodaj nagłówek typu zawartości do obiektu
+    myHeaders.append("Content-Type", "application/json");
+    // korzystając z wbudowanego pakietu narzędzi JSON, zmień obiekt na ciąg i zapisz w zmiennej
+    var raw = JSON.stringify({
+      email: email,
+      firstName: fname,
+      lastName: lname,
+    });
 
-  // utwórz obiekt JSON z parametrami dla wywołania API i zapisz w zmiennej
-  var requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
+    // utwórz obiekt JSON z parametrami dla wywołania API i zapisz w zmiennej
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
+    fetch(
+      "https://9bdx1bznr7.execute-api.eu-north-1.amazonaws.com/dev",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => alert(JSON.parse(result).body))
+      .catch((error) => console.log("error", error));
   };
-  // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
-  fetch(
-    "https://9bdx1bznr7.execute-api.eu-north-1.amazonaws.com/dev",
-    requestOptions
-  )
-    .then((response) => response.text())
-    .then((result) => alert(JSON.parse(result).body))
-    .catch((error) => console.log("error", error));
 };
 
 deleteBtn.onclick = () => {
@@ -96,32 +98,3 @@ deleteBtn.onclick = () => {
 
   console.log("Lista po usunięciu:", userList);
 };
-/*
-var callAPI = (firstName, lastName, email) => {
-  // utwórz obiekt nagłówków
-  var myHeaders = new Headers();
-  // dodaj nagłówek typu zawartości do obiektu
-  myHeaders.append("Content-Type", "application/json");
-  // korzystając z wbudowanego pakietu narzędzi JSON, zmień obiekt na ciąg i zapisz w zmiennej
-  var raw = JSON.stringify({
-    email: email,
-    firstName: firstName,
-    lastName: lastName,
-  });
-
-  // utwórz obiekt JSON z parametrami dla wywołania API i zapisz w zmiennej
-  var requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow",
-  };
-  // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
-  fetch(
-    "https://9bdx1bznr7.execute-api.eu-north-1.amazonaws.com/dev",
-    requestOptions
-  )
-    .then((response) => response.text())
-    .then((result) => alert(JSON.parse(result).body))
-    .catch((error) => console.log("error", error));
-};*/
