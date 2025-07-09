@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wykresy Cen Akcji</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-   
-   <header class="top-bar" id="header">
-        <h1>Mass Email Service</h1>
-        <div class= "outside">
-            <div class= "inside">
-                <button id="login-btn" onclick="window.location.href='login.html'">Wyloguj się</button>
-            </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top-bar" id="header">
+      <h1>Mass Email Service</h1>
+      <div class="outside">
+        <div class="inside">
+          <div>
+            <button id="signIn">Sign In</button>
+          </div>
+
+          <script type="module">
+            import { userManager } from "./main.js";
+
+            document
+              .getElementById("signIn")
+              .addEventListener("click", async () => {
+                await userManager.signinRedirect();
+              });
+          </script>
         </div>
+      </div>
     </header>
     <main>
-    <h1>Zaloguj się</h1>
-        <div>
-        <button id="signIn">Sign In</button>
-        </div>
-
-        <script type="module">
-        import { userManager } from "./main.js";
-
-        document.getElementById("signIn").addEventListener("click", async () => {
-        await userManager.signinRedirect();
-        });
-        </script>
+      <div class="container_index">
+        <h1 class="reminder">Zaloguj się</h1>
+      </div>
     </main>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

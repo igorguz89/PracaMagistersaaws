@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Logowanie - Moja Giełda</title>
-    <link rel="stylesheet" href="styles-form.css">
-</head>
-<body>
-    
-    
-        <header class="top-bar" id="header">
-        <h1>Mass Email Service</h1>
-        <div class= "outside">
-            <div class= "inside">
-                <button id="login-btn" onclick="window.location.href='login.html'">Wyloguj się</button>
-            </div>
+    <link rel="stylesheet" href="styles-form.css" />
+  </head>
+  <body>
+    <header class="top-bar" id="header">
+      <h1>Mass Email Service</h1>
+      <div class="outside">
+        <div class="inside">
+          <button id="login-btn" onclick="window.location.href='login.html'">
+            Wyloguj się
+          </button>
         </div>
+      </div>
     </header>
 
-    
     <main>
-        <form id="login-form">
-            <label for="username">Nazwa użytkownika:</label>
-            <input type="text" id="username" name="username" placeholder="Wpisz swoją nazwę" required>
+      <form id="login-form">
+        <label for="username">Nazwa użytkownika:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Wpisz swoją nazwę"
+          required
+        />
 
-            <label for="password">Hasło:</label>
-            <input type="password" id="password" name="password" placeholder="Wpisz swoje hasło" required>
+        <label for="password">Hasło:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Wpisz swoje hasło"
+          required
+        />
 
-            <button type="submit">Zaloguj się</button>
-            <button id="singin-btn" type="button" onclick="window.location.href='signup.html'">Zarejestruj się</button>
-        </form>
+        <button type="submit">Zaloguj się</button>
+        <button
+          id="singin-btn"
+          type="button"
+          onclick="window.location.href='signup.html'"
+        >
+          Zarejestruj się
+        </button>
+      </form>
     </main>
-</body>
+  </body>
 </html>
