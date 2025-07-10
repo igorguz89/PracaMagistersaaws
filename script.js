@@ -52,7 +52,7 @@ saveUser.onclick = () => {
     alert("Wszystkie pola są wymagane.");
   }
 
-  var callAPI = (firstName, lastName, email) => {
+  var callAPI = (fname, lname, email) => {
     // utwórz obiekt nagłówków
     var myHeaders = new Headers();
     // dodaj nagłówek typu zawartości do obiektu
@@ -73,7 +73,7 @@ saveUser.onclick = () => {
     };
     // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
     fetch(
-      "https://9bdx1bznr7.execute-api.eu-north-1.amazonaws.com/dev",
+      "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST",
       requestOptions
     )
       .then((response) => response.text())
