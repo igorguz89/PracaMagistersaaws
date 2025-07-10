@@ -39,10 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({
+     const raw = JSON.stringify({
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      imie: user.firstName,
+      nazwisko: user.lastName,
     });
 
     const requestOptions = {
