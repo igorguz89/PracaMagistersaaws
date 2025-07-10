@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
   const fetchUsers = () => {
     // UWAGA: Zastąp ten URL prawidłowym adresem URL dla metody GET
-    const GET_USERS_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/GET/dev";
+    const GET_USERS_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/GET_DATA/dev";
 
     return fetch(GET_USERS_API_URL)
       .then((response) => {
