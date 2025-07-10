@@ -77,7 +77,7 @@
           <input type="text" id="firstName" placeholder="Imię" required />
           <input type="text" id="lastName" placeholder="Nazwisko" required />
           <input type="email" id="emailUser" placeholder="Email" required />
-          <button id="saveUser">Zapisz</button>
+          <button id="saveUser" onclick="callAPI(document.getElementById('base').value,document.getElementById('exponent').value)">Zapisz</button>
         </div>
       </div>
     </main>
