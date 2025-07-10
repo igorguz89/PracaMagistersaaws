@@ -51,35 +51,35 @@ saveUser.onclick = () => {
   } else {
     alert("Wszystkie pola są wymagane.");
   }
+};
 
-  var callAPI = (fname, lname, email) => {
-    // utwórz obiekt nagłówków
-    var myHeaders = new Headers();
-    // dodaj nagłówek typu zawartości do obiektu
-    myHeaders.append("Content-Type", "application/json");
-    // korzystając z wbudowanego pakietu narzędzi JSON, zmień obiekt na ciąg i zapisz w zmiennej
-    var raw = JSON.stringify({
-      email: email,
-      firstName: fname,
-      lastName: lname,
-    });
+var callAPI = (firstname, lastname, email) => {
+  // utwórz obiekt nagłówków
+  var myHeaders = new Headers();
+  // dodaj nagłówek typu zawartości do obiektu
+  myHeaders.append("Content-Type", "application/json");
+  // korzystając z wbudowanego pakietu narzędzi JSON, zmień obiekt na ciąg i zapisz w zmiennej
+  var raw = JSON.stringify({
+    email: email,
+    firstName: firstname,
+    lastName: lastname,
+  });
 
-    // utwórz obiekt JSON z parametrami dla wywołania API i zapisz w zmiennej
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-    // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
-    fetch(
-      "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST/dev",
-      requestOptions
-    )
-      .then((response) => response.text())
-      .then((result) => alert(JSON.parse(result).body))
-      .catch((error) => console.log("error", error));
+  // utwórz obiekt JSON z parametrami dla wywołania API i zapisz w zmiennej
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
   };
+  // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
+  fetch(
+    "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST",
+    requestOptions
+  )
+    .then((response) => response.text())
+    .then((result) => alert(JSON.parse(result).body))
+    .catch((error) => console.log("error", error));
 };
 
 deleteBtn.onclick = () => {
