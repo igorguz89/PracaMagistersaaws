@@ -53,7 +53,7 @@ saveUser.onclick = () => {
   }
 };
 
-var callAPI = (firstname, lastname, email) => {
+var callAPI = (firstName, lastName, emailUser) => {
   // utwórz obiekt nagłówków
   var myHeaders = new Headers();
   // dodaj nagłówek typu zawartości do obiektu
