@@ -1,5 +1,5 @@
 // Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   // Pobieramy elementy, które są specyficzne dla PanelUser.html
   const addBtn = document.getElementById("addBtn");
   const deleteBtn = document.getElementById("deleteBtn");
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderUserRow = (user) => {
     const row = document.createElement("tr");
     // Używamy atrybutu data-* do przechowywania unikalnego identyfikatora (email)
-    row.setAttribute('data-email', user.email);
+    row.setAttribute("data-email", user.email);
     row.innerHTML = `
       <td><input type="checkbox" class="rowCheckbox"></td>
       <td>${user.firstName}</td>
@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Funkcja do ponownego renderowania całej tabeli na podstawie userList
   const renderTable = () => {
-    tbody.innerHTML = ''; // Wyczyść tabelę
-    userList.forEach(user => renderUserRow(user));
+    tbody.innerHTML = ""; // Wyczyść tabelę
+    userList.forEach((user) => renderUserRow(user));
   };
 
   // --- Logika API ---
@@ -52,39 +52,41 @@ document.addEventListener('DOMContentLoaded', () => {
       redirect: "follow",
     };
 
-    return fetch("https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST/dev", requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Błąd HTTP! Status: ${response.status}`);
-        }
-        return response.json(); // Zakładamy, że API zwraca JSON
-      });
+    return fetch(
+      "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST/dev",
+      requestOptions
+    ).then((response) => {
+      if (!response.ok) {
+        throw new Error(`Błąd HTTP! Status: ${response.status}`);
+      }
+      return response.json(); // Zakładamy, że API zwraca JSON
+    });
   };
 
   // --- Event Listeners (tylko jeśli elementy istnieją) ---
 
   // Sprawdzamy, czy jesteśmy na stronie PanelUser.html, sprawdzając istnienie przycisku
   if (addBtn) {
-    addBtn.addEventListener('click', () => {
+    addBtn.addEventListener("click", () => {
       modal.style.display = "block";
     });
   }
 
   if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', () => {
+    closeModalBtn.addEventListener("click", () => {
       modal.style.display = "none";
     });
   }
 
   // Zamykanie modala po kliknięciu poza nim
-  window.addEventListener('click', (e) => {
+  window.addEventListener("click", (e) => {
     if (e.target == modal) {
       modal.style.display = "none";
     }
   });
 
   if (saveUserBtn) {
-    saveUserBtn.addEventListener('click', () => {
+    saveUserBtn.addEventListener("click", () => {
       const firstName = document.getElementById("firstName").value.trim();
       const lastName = document.getElementById("lastName").value.trim();
       const email = document.getElementById("emailUser").value.trim();
@@ -94,9 +96,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Wywołaj API
         callAPI(newUser)
-          .then(result => {
+          .then((result) => {
             console.log("Odpowiedź z API:", result);
-            alert(JSON.parse(result.body).message || "Użytkownik zapisany!");
+            let alertMessage;
+            try {
+              // API Gateway może zwracać odpowiedź jako stringified JSON w polu 'body'
+              const bodyContent = JSON.parse(result.body);
+              alertMessage =
+                bodyContent.message || "Operacja zakończona pomyślnie.";
+            } catch (e) {
+              // Jeśli parsowanie się nie uda, 'body' może być zwykłym tekstem
+              // lub sama odpowiedź jest wiadomością.
+              alertMessage =
+                result.body || result.message || "Użytkownik zapisany!";
+            }
+            alert(alertMessage);
 
             // 2. Jeśli API się powiodło, zaktualizuj stan i UI
             userList.push(newUser);
@@ -108,11 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("emailUser").value = "";
             modal.style.display = "none";
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Błąd podczas zapisywania użytkownika:", error);
             alert(`Nie udało się zapisać użytkownika: ${error.message}`);
           });
-
       } else {
         alert("Wszystkie pola są wymagane.");
       }
@@ -120,13 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (deleteBtn) {
-    deleteBtn.addEventListener('click', () => {
+    deleteBtn.addEventListener("click", () => {
       const checkboxes = document.querySelectorAll(".rowCheckbox:checked");
       const emailsToDelete = [];
 
-      checkboxes.forEach(cb => {
+      checkboxes.forEach((cb) => {
         const row = cb.closest("tr");
-        const email = row.getAttribute('data-email');
+        const email = row.getAttribute("data-email");
         if (email) {
           emailsToDelete.push(email);
         }
@@ -140,7 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Do usunięcia (z API):", emailsToDelete);
 
         // Aktualizuj listę lokalną
-        userList = userList.filter(user => !emailsToDelete.includes(user.email));
+        userList = userList.filter(
+          (user) => !emailsToDelete.includes(user.email)
+        );
 
         // Przerenderuj całą tabelę
         renderTable();
