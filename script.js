@@ -74,7 +74,7 @@ var callAPI = (firstname, lastname, email) => {
   };
   // wykonaj wywołanie API z parametrami i użyj obietnic, aby uzyskać odpowiedź
   fetch(
-    "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST",
+    "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST/dev",
     requestOptions
   )
     .then((response) => response.text())
