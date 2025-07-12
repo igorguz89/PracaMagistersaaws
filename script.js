@@ -360,39 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 ///USUNAC JAK NIE DZIALA
 ///FUNKCJA DO USUWANIA API
-  const deleteUsersAPI = async (emailsToDelete) => {
-        // 1. Zdefiniuj pełny adres URL swojego endpointu API
-        const DELETE_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/Post_to_delete";
 
-        try {
-            // 3. Przygotuj opcje żądania dla `fetch`
-            const requestOptions = {
-                method: 'DELETE', // lub 'POST', jeśli Twoje API tego wymaga
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Dołącz token autoryzacyjny do nagłówka
-                    'Authorization': `Bearer ${idToken}`
-                },
-                body: JSON.stringify({
-                    emails: emailsToDelete
-                })
-            };
-
-            console.log("Wysyłanie żądania usunięcia na URL:", DELETE_API_URL);
-            const response = await fetch(DELETE_API_URL, requestOptions);
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: response.statusText }));
-                throw new Error(`Błąd API: ${errorData.message || `Status ${response.status}`}`);
-            }
-
-            return response.json(); // Zwróć odpowiedź z API
-        } catch (error) {
-            console.error("Błąd w deleteUsersAPI:", error);
-            // Rzuć błąd dalej, aby został złapany w bloku try...catch przycisku
-            throw error;
-        }
-    };
 
 
   
@@ -410,35 +378,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (emailsToDelete.length > 0) {
-     // Dobrą praktyką jest potwierdzenie operacji destrukcyjnej
-        if (confirm(`Czy na pewno chcesz usunąć ${emailsToDelete.length} zaznaczonych użytkowników?`)) {
-          try {
-            // Wywołaj API i poczekaj na odpowiedź
-            const result = await deleteUsersAPI(emailsToDelete);
+        // Tutaj powinna być logika wywołania API do usuwania użytkowników
+        // np. Promise.all(emailsToDelete.map(email => callDeleteAPI(email)))
+        // Na razie symulujemy sukces:
 
-            // --- SUKCES ---
-            // Logika poniżej wykona się DOPIERO, gdy API odpowie sukcesem.
+        console.log("Do usunięcia (z API):", emailsToDelete);
 
-            // 1. Zaktualizuj lokalną listę użytkowników
-            userList = userList.filter(
-              (user) => !emailsToDelete.includes(user.email)
-            );
+        // Aktualizuj listę lokalną
+        userList = userList.filter(
+          (user) => !emailsToDelete.includes(user.email)
+        );
 
-            // 2. Przerenderuj tabelę, aby odzwierciedlić zmiany
-            renderTable();
+        // Przerenderuj całą tabelę
+        renderTable();
 
-            console.log("Odpowiedź z API:", result);
-            alert(result.message || "Użytkownicy zostali pomyślnie usunięci.");
-
-          } catch (error) {
-            // --- BŁĄD ---
-            // Logika poniżej wykona się tylko, jeśli API zwróci błąd.
-            console.error("Błąd podczas usuwania użytkowników:", error);
-            // Spróbuj wyciągnąć komunikat o błędzie z odpowiedzi API
-            const errorMessage = error.response?.data?.message || error.message || "Wystąpił nieznany błąd.";
-            alert(`Nie udało się usunąć użytkowników: ${errorMessage}`);
-          }
-        }
+        console.log("Lista po usunięciu:", userList);
       } else {
         alert("Zaznacz użytkowników do usunięcia.");
       }
