@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wykresy Cen Akcji</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Zostawiamy jedną, sprawdzoną wersję bibliotek z CDN -->
-    
-    
-    <!-- Dodajemy plik konfiguracyjny dla OIDC -->
-    <script src="auth-config.js"></script>
-    <!-- Dodajemy plik konfiguracyjny dla Amplify -->
-    <script src="amplify-config.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -23,26 +16,36 @@
             <button id="signIn">Sign In</button>
           </div>
 
-          <script>
-            // Tworzymy instancję menedżera użytkowników, używając globalnej konfiguracji
-            const userManager = new Oidc.UserManager(window.oidcSettings);
+          <script type="module">
+            import { userManager } from "./main.js";
 
             document
               .getElementById("signIn")
               .addEventListener("click", async () => {
-                await userManager.signinRedirect(); // Wywołujemy przekierowanie do logowania
+                await userManager.signinRedirect();
               });
           </script>
         </div>
       </div>
     </header>
     <main>
+      <div>
+        <button id="signIn">Sign In</button>
+      </div>
+
+      <script type="module">
+        import { userManager } from "./main.js";
+
+        document
+          .getElementById("signIn")
+          .addEventListener("click", async () => {
+            await userManager.signinRedirect();
+          });
+      </script>
       <div class="container_index">
         <h1 class="reminder">Zaloguj się</h1>
       </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
-    <script src="https://unpkg.com/aws-amplify@latest/dist/aws-amplify.min.js"></script> 
-    <script type="module" src="script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

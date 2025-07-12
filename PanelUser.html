@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wykresy Cen Akcji</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Zostawiamy jedną, sprawdzoną wersję bibliotek z CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.3.12/dist/aws-amplify.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
-    <!-- Dodajemy plik konfiguracyjny dla OIDC -->
-    <script src="auth-config.js"></script>
-    <!-- Dodajemy plik konfiguracyjny dla Amplify -->
-    <script src="amplify-config.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -22,6 +15,14 @@
           <div>
             <button id="signOut">Log out</button>
           </div>
+          <script type="module">
+            import { userManager, signOutRedirect } from "./main.js";
+            document
+              .getElementById("signOut")
+              .addEventListener("click", async () => {
+                await signOutRedirect();
+              });
+          </script>
         </div>
       </div>
     </header>
@@ -37,27 +38,17 @@
         Refresh token:
         <pre id="refresh-token"></pre>
       </div>
-      <script>
-        // Tworzymy jedną, globalną instancję menedżera użytkowników dla tej strony
-        const userManager = new Oidc.UserManager(window.oidcSettings);
 
-        // Obsługa wylogowania
-        document.getElementById("signOut").addEventListener("click", async () => {
-          await userManager.signoutRedirect();
-        });
+      <script type="module">
+        import { userManager, signOutRedirect } from "./main.js";
 
-        // Obsługa callbacku po zalogowaniu i wyświetlenie danych użytkownika
         userManager.signinCallback().then(function (user) {
-          if (user) {
-            document.getElementById("email").textContent = user.profile?.email;
-            document.getElementById("access-token").textContent = user.access_token;
-            document.getElementById("id-token").textContent = user.id_token;
-            document.getElementById("refresh-token").textContent = user.refresh_token;
-          }
-        }).catch(error => {
-          console.error("Błąd podczas przetwarzania logowania:", error);
-          // Opcjonalnie: przekieruj na stronę główną, jeśli nie ma sesji
-          // window.location.href = "/index.html";
+          document.getElementById("email").textContent = user.profile?.email;
+          document.getElementById("access-token").textContent =
+            user.access_token;
+          document.getElementById("id-token").textContent = user.id_token;
+          document.getElementById("refresh-token").textContent =
+            user.refresh_token;
         });
       </script>
       <h1>Lista użytkowników</h1>
@@ -90,7 +81,7 @@
         </div>
       </div>
     </main>
-    
-    <script type="module" src="script.js"></script>
+
+    <script src="script.js"></script>
   </body>
 </html>
