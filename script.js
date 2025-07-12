@@ -385,3 +385,52 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const deleteButton = document.getElementById('deleteBtn');
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async () => {
+            const emailsToDelete = ["adsg@wp.pl"]; // Przykładowa lista e-maili do usunięcia
+            // W rzeczywistej aplikacji, ta lista powinna pochodzić np. z formularza lub zaznaczonych elementów.
+
+            try {
+                // 1. Pobierz aktualną sesję użytkownika i token ID
+                const session = await Auth.currentSession();
+                const idToken = session.getIdToken().getJwtToken();
+
+                // 2. Skonfiguruj żądanie do API Gateway
+                const apiName = 'TwojeAPI'; // Zmień na nazwę swojego API z aws-exports.js (np. 'myapi')
+                const path = 'https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/DELETE/dev'; // Zmień na ścieżkę do Twojego endpointu Lambda
+
+                const requestBody = {
+                    emails: emailsToDelete
+                };
+
+                const myInit = {
+                    body: requestBody, // Dane wysyłane w ciele żądania
+                    headers: {
+                        Authorization: `Bearer ${idToken}`, // Dołącz token ID do nagłówka autoryzacji
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                // 3. Wyślij żądanie POST do API Gateway
+                console.log('Wysyłanie żądania usunięcia...', requestBody);
+                const response = await API.post(apiName, path, myInit);
+                console.log('Odpowiedź z Lambda:', response);
+                alert('Operacja usunięcia zakończona pomyślnie!');
+
+            } catch (error) {
+                console.error('Błąd podczas usuwania rekordów:', error);
+                if (error.response && error.response.status === 403) {
+                    alert('Brak uprawnień. Tylko administratorzy mogą usuwać rekordy.');
+                } else if (error.response && error.response.data && error.response.data.message) {
+                    alert(`Błąd: ${error.response.data.message}`);
+                } else {
+                    alert('Wystąpił błąd podczas usuwania rekordów.');
+                }
+            }
+        });
+    }
+});
+
+
