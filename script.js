@@ -363,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ///FUNKCJA DO USUWANIA API
 const deleteUsersAPI = async (emailsToDelete) => {
         // 1. Zdefiniuj pełny adres URL swojego endpointu API
-        const DELETE_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/Post_to_delete/Lambda_Delete_DynamoDB_EmailRecord";
+        const DELETE_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/DeleteUsers/dev";
 
         try {
             // 3. Przygotuj opcje żądania dla `fetch`
