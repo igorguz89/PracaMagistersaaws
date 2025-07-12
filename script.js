@@ -398,7 +398,7 @@ const deleteUsersAPI = async (emailsToDelete) => {
 
   
   if (deleteBtn) {
-    deleteBtn.addEventListener("click", () => {
+    deleteBtn.addEventListener("click", async () => {
       const checkboxes = document.querySelectorAll(".rowCheckbox:checked");
       const emailsToDelete = [];
 
