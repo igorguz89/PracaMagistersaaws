@@ -1,9 +1,75 @@
 // Konfiguracja Amplify jest teraz ładowana z pliku amplify-config.js, który ustawia globalny obiekt window.aws_exports
 
 // Pobieramy potrzebne obiekty z globalnego obiektu window.aws_amplify
-const { Amplify, Auth, API } = window.aws_amplify;
+//const { Amplify, Auth, API } = window.aws_amplify;
 
-Amplify.configure(window.aws_exports);
+//Amplify.configure(window.aws_exports);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+const Amplify = window.Amplify;
+const Auth = window.Amplify.Auth;
+const API = window.Amplify.API;
+
+// Jeśli nadal chcesz używać aws-exports.js (utworzonego ręcznie lub skopiowanego),
+// upewnij się, że jest załadowany w index.html przed script.js
+// i jest dostępny globalnie (np. jako window.awsExports lub awsmobile)
+// Jeśli masz `aws-exports.js` który exportuje `default awsmobile;`
+// Wtedy możesz go załadować jako <script src="aws-exports.js"></script>
+// i odwołać się do niego jako `window.awsmobile`
+const awsExports = window.awsmobile; // <-- Zakładając, że aws-exports.js wystawia globalną zmienną `awsmobile`
+
+// Inicjalizacja Amplify
+if (Amplify && awsExports) {
+    Amplify.configure(awsExports);
+    console.log("Amplify configured successfully!");
+} else if (Amplify) {
+    // Jeśli nie masz aws-exports.js, skonfiguruj ręcznie Cognito Auth
+    // Zastąp wartości swoimi danymi z konsoli AWS
+    Amplify.configure({
+        Auth: {
+            userPoolId: '1_3pvC4DEG1',
+            userPoolWebClientId: '22j935nr3cusdmb2vshjrimvj8',
+            region: 'eu-north-1'
+        },
+        API: {
+            endpoints: [
+                {
+                    name: "GET_DATA", // ⭐ Nazwa Twojego API
+                    endpoint: "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/GET_DATA", // ⭐ Główny URL API Gateway
+                    region: "eu-north-1" // ⭐ Twój region AWS
+                }
+            ]
+        }
+    });
+    console.warn("Amplify configured manually, aws-exports.js not found or not loaded.");
+} else {
+    console.error("AWS Amplify library not found. Please ensure aws-amplify.min.js is loaded correctly.");
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
 document.addEventListener("DOMContentLoaded", () => {
