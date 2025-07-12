@@ -384,7 +384,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
+import { Amplify, Auth, API } from 'aws-amplify';
+Amplify.configure(awsExports);
 document.addEventListener('DOMContentLoaded', () => {
     const deleteButton = document.getElementById('deleteBtn');
     if (deleteButton) {
