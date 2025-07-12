@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Logika API ---
 
-  const callAPI = (user) => {
+  /*const callAPI = (user) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return response.json(); // Zakładamy, że API zwraca JSON
     });
-  };
+  };*/
 
   // --- Event Listeners (tylko jeśli elementy istnieją) ---
 
