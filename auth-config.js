@@ -4,9 +4,11 @@
 // Ustawiamy konfigurację jako globalną zmienną, aby była dostępna w innych skryptach.
 window.oidcSettings = {
   // ZASTĄP: Adres URL Twojego dostawcy tożsamości, np. https://cognito-idp.eu-north-1.amazonaws.com/YOUR_USER_POOL_ID
-  authority: " https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_3pvC4DEG1",
+  // Usunięto spację na początku adresu
+  authority: "https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_3pvC4DEG1",
   // ZASTĄP: ID klienta (Client ID) z Twojej puli użytkowników Cognito.
-  client_id: "40bcd90c-6071-700f-601b-e1a9b3dc0e3b",
+  // UWAGA: Ten format (UUID) wygląda niepoprawnie dla Cognito. Client ID w Cognito to zazwyczaj ciąg alfanumeryczny.
+  client_id: "40bcd90c-6071-700f-601b-e1a9b3dc0e3b", // Upewnij się, że to jest poprawny Client ID
   // Adres, na który użytkownik zostanie przekierowany po zalogowaniu.
   redirect_uri: window.location.origin + "/PanelUser.html",
   // Adres, na który użytkownik zostanie przekierowany po wylogowaniu.

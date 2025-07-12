@@ -1,5 +1,5 @@
 // Usuwamy import z 'aws-amplify', ponieważ biblioteka jest teraz ładowana z CDN
-import awsExports from './aws-exports';
+import awsExports from './aws-exports.js';
 
 // Pobieramy potrzebne obiekty z globalnego obiektu window.aws_amplify
 const { Amplify, Auth, API } = window.aws_amplify;

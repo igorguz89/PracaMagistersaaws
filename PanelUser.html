@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wykresy Cen Akcji</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Dodajemy bibliotekę AWS Amplify z CDN -->
-    <script src="https://unpkg.com/aws-amplify@5.3.12/dist/aws-amplify.min.js"></script>
-    <!-- Dodajemy bibliotekę OIDC z CDN -->
-    <script src="https://unpkg.com/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
+    <!-- Zmieniamy CDN na bardziej niezawodny jsdelivr -->
+    <script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.3.12/dist/aws-amplify.min.js"></script>
+    <!-- Zmieniamy CDN na bardziej niezawodny jsdelivr -->
+    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
     <!-- Dodajemy plik konfiguracyjny dla OIDC -->
     <script src="auth-config.js"></script>
     <link rel="stylesheet" href="styles.css" />
@@ -21,15 +21,6 @@
           <div>
             <button id="signOut">Log out</button>
           </div>
-          <script>
-            // Tworzymy jedną, globalną instancję menedżera użytkowników dla tej strony
-            const userManager = new Oidc.UserManager(window.oidcSettings);
-            document
-              .getElementById("signOut")
-              .addEventListener("click", async () => {
-                await userManager.signoutRedirect();
-              });
-              </script>
         </div>
       </div>
     </header>
@@ -45,15 +36,27 @@
         Refresh token:
         <pre id="refresh-token"></pre>
       </div>
+      <script>
+        // Tworzymy jedną, globalną instancję menedżera użytkowników dla tej strony
+        const userManager = new Oidc.UserManager(window.oidcSettings);
 
-        // Używamy tej samej instancji userManager do obsługi callbacku po zalogowaniu
+        // Obsługa wylogowania
+        document.getElementById("signOut").addEventListener("click", async () => {
+          await userManager.signoutRedirect();
+        });
+
+        // Obsługa callbacku po zalogowaniu i wyświetlenie danych użytkownika
         userManager.signinCallback().then(function (user) {
-          document.getElementById("email").textContent = user.profile?.email;
-          document.getElementById("access-token").textContent =
-            user.access_token;
-          document.getElementById("id-token").textContent = user.id_token;
-          document.getElementById("refresh-token").textContent =
-            user.refresh_token;
+          if (user) {
+            document.getElementById("email").textContent = user.profile?.email;
+            document.getElementById("access-token").textContent = user.access_token;
+            document.getElementById("id-token").textContent = user.id_token;
+            document.getElementById("refresh-token").textContent = user.refresh_token;
+          }
+        }).catch(error => {
+          console.error("Błąd podczas przetwarzania logowania:", error);
+          // Opcjonalnie: przekieruj na stronę główną, jeśli nie ma sesji
+          // window.location.href = "/index.html";
         });
       </script>
       <h1>Lista użytkowników</h1>
