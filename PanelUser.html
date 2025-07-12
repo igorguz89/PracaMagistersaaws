@@ -7,6 +7,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Dodajemy bibliotekę AWS Amplify z CDN -->
     <script src="https://unpkg.com/aws-amplify@5.3.12/dist/aws-amplify.min.js"></script>
+    <!-- Dodajemy bibliotekę OIDC z CDN -->
+    <script src="https://unpkg.com/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
+    <!-- Dodajemy plik konfiguracyjny dla OIDC -->
+    <script src="auth-config.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -17,14 +21,15 @@
           <div>
             <button id="signOut">Log out</button>
           </div>
-          <script type="module">
-            import { userManager, signOutRedirect } from "./main.js";
+          <script>
+            // Tworzymy jedną, globalną instancję menedżera użytkowników dla tej strony
+            const userManager = new Oidc.UserManager(window.oidcSettings);
             document
               .getElementById("signOut")
               .addEventListener("click", async () => {
-                await signOutRedirect();
+                await userManager.signoutRedirect();
               });
-          </script>
+              </script>
         </div>
       </div>
     </header>
@@ -41,9 +46,7 @@
         <pre id="refresh-token"></pre>
       </div>
 
-      <script type="module">
-        import { userManager, signOutRedirect } from "./main.js";
-
+        // Używamy tej samej instancji userManager do obsługi callbacku po zalogowaniu
         userManager.signinCallback().then(function (user) {
           document.getElementById("email").textContent = user.profile?.email;
           document.getElementById("access-token").textContent =
