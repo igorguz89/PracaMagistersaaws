@@ -134,40 +134,54 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (deleteBtn) {
-    deleteBtn.addEventListener("click", () => {
+    // Używamy funkcji asynchronicznej, aby móc użyć 'await'
+    deleteBtn.addEventListener("click", async () => {
       const checkboxes = document.querySelectorAll(".rowCheckbox:checked");
       const emailsToDelete = [];
 
       checkboxes.forEach((cb) => {
         const row = cb.closest("tr");
         const email = row.getAttribute("data-email");
-        if (email) {
-          emailsToDelete.push(email);
-        }
+        if (email) emailsToDelete.push(email);
       });
 
       if (emailsToDelete.length > 0) {
-        // Tutaj powinna być logika wywołania API do usuwania użytkowników
-        // np. Promise.all(emailsToDelete.map(email => callDeleteAPI(email)))
-        // Na razie symulujemy sukces:
+        // Dobrą praktyką jest potwierdzenie operacji destrukcyjnej
+        if (confirm(`Czy na pewno chcesz usunąć ${emailsToDelete.length} zaznaczonych użytkowników?`)) {
+          try {
+            // Wywołaj API i poczekaj na odpowiedź
+            const result = await deleteUsersAPI(emailsToDelete);
 
-        console.log("Do usunięcia (z API):", emailsToDelete);
+            // --- SUKCES ---
+            // Logika poniżej wykona się DOPIERO, gdy API odpowie sukcesem.
 
-        // Aktualizuj listę lokalną
-        userList = userList.filter(
-          (user) => !emailsToDelete.includes(user.email)
-        );
+            // 1. Zaktualizuj lokalną listę użytkowników
+            userList = userList.filter(
+              (user) => !emailsToDelete.includes(user.email)
+            );
 
-        // Przerenderuj całą tabelę
-        renderTable();
+            // 2. Przerenderuj tabelę, aby odzwierciedlić zmiany
+            renderTable();
 
-        console.log("Lista po usunięciu:", userList);
+            console.log("Odpowiedź z API:", result);
+            alert(result.message || "Użytkownicy zostali pomyślnie usunięci.");
+
+          } catch (error) {
+            // --- BŁĄD ---
+            // Logika poniżej wykona się tylko, jeśli API zwróci błąd.
+            console.error("Błąd podczas usuwania użytkowników:", error);
+            // Spróbuj wyciągnąć komunikat o błędzie z odpowiedzi API
+            const errorMessage = error.response?.data?.message || error.message || "Wystąpił nieznany błąd.";
+            alert(`Nie udało się usunąć użytkowników: ${errorMessage}`);
+          }
+        }
       } else {
         alert("Zaznacz użytkowników do usunięcia.");
       }
     });
   }
-});// Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
+});
+  // Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
 document.addEventListener("DOMContentLoaded", () => {
   // Pobieramy elementy, które są specyficzne dla PanelUser.html
   const addBtn = document.getElementById("addBtn");
@@ -363,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ///FUNKCJA DO USUWANIA API
 const deleteUsersAPI = async (emailsToDelete) => {
         // 1. Zdefiniuj pełny adres URL swojego endpointu API
-        const DELETE_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/DeleteUsers/dev";
+        const DELETE_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/DeleteUsers";
 
         try {
             // 3. Przygotuj opcje żądania dla `fetch`
