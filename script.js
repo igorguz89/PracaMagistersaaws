@@ -1,10 +1,9 @@
-// Usuwamy import z 'aws-amplify', ponieważ biblioteka jest teraz ładowana z CDN
-import awsExports from './aws-exports.js';
+// Konfiguracja Amplify jest teraz ładowana z pliku amplify-config.js, który ustawia globalny obiekt window.aws_exports
 
 // Pobieramy potrzebne obiekty z globalnego obiektu window.aws_amplify
 const { Amplify, Auth, API } = window.aws_amplify;
 
-Amplify.configure(awsExports); // Ta linia pozostaje bez zmian
+Amplify.configure(window.aws_exports);
 
 // Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
 document.addEventListener("DOMContentLoaded", () => {
