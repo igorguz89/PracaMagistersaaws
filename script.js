@@ -44,33 +44,48 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Funkcje API ---
 
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
-  const fetchUsers = () => {
-    // UWAGA: Zastąp ten URL prawidłowym adresem URL dla metody GET
+  const fetchUsers = async () => {
     const GET_USERS_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/GET_DATA/dev";
 
-    return fetch(GET_USERS_API_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Błąd HTTP! Status: ${response.status}`);
-        }
-        return response.json(); // Parsuje zewnętrzny obiekt JSON
-      })
-      .then((data) => {
-        console.log("Otrzymano surowe dane z API:", data);
-        if (data.body && typeof data.body === "string") {
-          // Parsuje string z pola 'body', aby uzyskać tablicę użytkowników
-          const usersFromApi = JSON.parse(data.body);
+    try {
+        // 1. Pobierz aktualną sesję użytkownika, aby uzyskać token autoryzacyjny
+        const session = await Auth.currentSession();
+        const idToken = session.getIdToken().getJwtToken();
 
-          // Mapuje dane z API na format używany w naszej aplikacji
-          return usersFromApi.map((apiUser) => ({
-            firstName: apiUser.Imie,
-            lastName: apiUser.Nazwisko,
-            email: apiUser.ID,
-          }));
-        } else {
-          throw new Error("Odpowiedź API nie zawierała oczekiwanego pola 'body' w formacie string.");
+        // 2. Przygotuj opcje żądania, dołączając nagłówek autoryzacji
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            }
+        };
+
+        // 3. Wykonaj uwierzytelnione żądanie do API
+        const response = await fetch(GET_USERS_API_URL, requestOptions);
+
+        if (!response.ok) {
+            throw new Error(`Błąd HTTP! Status: ${response.status}`);
         }
-      });
+
+        const data = await response.json();
+        console.log("Otrzymano surowe dane z API:", data);
+
+        if (data.body && typeof data.body === "string") {
+            const usersFromApi = JSON.parse(data.body);
+            return usersFromApi.map((apiUser) => ({
+                firstName: apiUser.Imie,
+                lastName: apiUser.Nazwisko,
+                email: apiUser.ID,
+            }));
+        } else {
+            throw new Error("Odpowiedź API nie zawierała oczekiwanego pola 'body' w formacie string.");
+        }
+    } catch (error) {
+        console.error("Błąd w fetchUsers:", error);
+        // Rzuć błąd dalej, aby został złapany w bloku .catch() przy wywołaniu
+        throw error;
+    }
   };
 
   const callAPI = (user) => {
