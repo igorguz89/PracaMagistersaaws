@@ -8,7 +8,7 @@ window.oidcSettings = {
   authority: "https://cognito-idp.eu-north-1.amazonaws.com/eu-north-1_3pvC4DEG1",
   // ZASTĄP: ID klienta (Client ID) z Twojej puli użytkowników Cognito.
   // UWAGA: Ten format (UUID) wygląda niepoprawnie dla Cognito. Client ID w Cognito to zazwyczaj ciąg alfanumeryczny.
-  client_id: "40bcd90c-6071-700f-601b-e1a9b3dc0e3b", // Upewnij się, że to jest poprawny Client ID
+  client_id: "22j935nr3cusdmb2vshjrimvj8", // Upewnij się, że to jest poprawny Client ID
   // Adres, na który użytkownik zostanie przekierowany po zalogowaniu.
   redirect_uri: window.location.origin + "/PanelUser.html",
   // Adres, na który użytkownik zostanie przekierowany po wylogowaniu.
