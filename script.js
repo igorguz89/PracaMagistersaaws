@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
 const getAuthToken = async () => {
     const user = await userManager.getUser();
     if (user && !user.expired) {
+      consol.log(" TO JEST TWOJ TOKEN")
+      consol.log(" user.id_token")
       return user.id_token;
     }
     // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
