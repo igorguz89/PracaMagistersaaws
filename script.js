@@ -48,15 +48,7 @@ const getAuthToken = async () => {
     throw new Error("Użytkownik nie jest uwierzytelniony lub sesja wygasła.");
   };
 
-const myToken = getAuthToken(); 
 
-if (myToken) {
-    console.log("Token został pomyślnie uzyskany:", myToken);
-   
-} else {
-    console.warn("Funkcja getAuthToken nie zwróciła tokena.");
-    
-}
 
 
 // --- Logika API ---
