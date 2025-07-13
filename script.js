@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const getAuthToken = async () => {
     const user = await userManager.getUser();
     if (user && !user.expired) {
+      console.log("Pobrany ID Token:", user.idToken)
       return user.id_token;
     }
     // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
