@@ -9,6 +9,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveUserBtn = document.getElementById("saveUser");
   const tbody = document.getElementById("userTableBody");
 
+
+  // Zmienna do przechowywania listy użytkowników (jako "single source of truth")
+  let userList = [];
+
+
+  // --- Funkcje pomocnicze ---
+
+  // Funkcja do renderowania pojedynczego wiersza w tabeli
+  const renderUserRow = (user) => {
+    const row = document.createElement("tr");
+    // Używamy atrybutu data-* do przechowywania unikalnego identyfikatora (email)
+    row.setAttribute("data-email", user.email);
+    row.innerHTML = `
+      <td><input type="checkbox" class="rowCheckbox"></td>
+      <td>${user.firstName}</td>
+      <td>${user.lastName}</td>
+      <td>${user.email}</td>
+    `;
+    tbody.appendChild(row);
+  };
+
+  // Funkcja do ponownego renderowania całej tabeli na podstawie userList
+  const renderTable = () => {
+    tbody.innerHTML = ""; // Wyczyść tabelę
+    userList.forEach((user) => renderUserRow(user));
+  };
+
 // --- Logika API ---
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
     const fetchUsers = async () => {
@@ -49,34 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
         throw error;
     }
   };
-
-
-  // Zmienna do przechowywania listy użytkowników (jako "single source of truth")
-  let userList = [];
-
-
-  // --- Funkcje pomocnicze ---
-
-  // Funkcja do renderowania pojedynczego wiersza w tabeli
-  const renderUserRow = (user) => {
-    const row = document.createElement("tr");
-    // Używamy atrybutu data-* do przechowywania unikalnego identyfikatora (email)
-    row.setAttribute("data-email", user.email);
-    row.innerHTML = `
-      <td><input type="checkbox" class="rowCheckbox"></td>
-      <td>${user.firstName}</td>
-      <td>${user.lastName}</td>
-      <td>${user.email}</td>
-    `;
-    tbody.appendChild(row);
-  };
-
-  // Funkcja do ponownego renderowania całej tabeli na podstawie userList
-  const renderTable = () => {
-    tbody.innerHTML = ""; // Wyczyść tabelę
-    userList.forEach((user) => renderUserRow(user));
-  };
-
   
 
   // --- Event Listeners (tylko jeśli elementy istnieją) ---
