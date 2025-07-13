@@ -40,8 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
 const getAuthToken = async () => {
     const user = await userManager.getUser();
     if (user && !user.expired) {
-      consol.log(" TO JEST TWOJ TOKEN")
-      consol.log(" user.id_token")
       return user.id_token;
     }
     // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
@@ -50,6 +48,15 @@ const getAuthToken = async () => {
     throw new Error("Użytkownik nie jest uwierzytelniony lub sesja wygasła.");
   };
 
+const myToken = getAuthToken(); 
+
+if (myToken) {
+    console.log("Token został pomyślnie uzyskany:", myToken);
+   
+} else {
+    console.warn("Funkcja getAuthToken nie zwróciła tokena.");
+    
+}
 
 
 // --- Logika API ---
