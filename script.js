@@ -1,4 +1,4 @@
-import { UserManager } from "https://cdn.jsdelivr.net/npm/oidc-client-ts@2.0.3/+esm";
+import { userManager, signOutRedirect } from "./main.js";   
 // Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
 document.addEventListener("DOMContentLoaded", () => {
   // Pobieramy elementy, które są specyficzne dla PanelUser.html
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModalBtn = document.getElementById("closeModal");
   const saveUserBtn = document.getElementById("saveUser");
   const tbody = document.getElementById("userTableBody");
-
+  
 
   // Zmienna do przechowywania listy użytkowników (jako "single source of truth")
   let userList = [];
@@ -35,6 +35,20 @@ document.addEventListener("DOMContentLoaded", () => {
     tbody.innerHTML = ""; // Wyczyść tabelę
     userList.forEach((user) => renderUserRow(user));
   };
+
+// Funkcja pobierajaca token zalogowanego uzytkownika
+const getAuthToken = async () => {
+    const user = await userManager.getUser();
+    if (user && !user.expired) {
+      return user.id_token;
+    }
+    // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
+    alert("Twoja sesja wygasła lub nie jesteś zalogowany. Proszę zalogować się ponownie.");
+    await userManager.signinRedirect();
+    throw new Error("Użytkownik nie jest uwierzytelniony lub sesja wygasła.");
+  };
+
+
 
 // --- Logika API ---
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
@@ -196,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-      
+   
 
   ///USUNAC JAK NIE DZIALA
 ///FUNKCJA DO USUWANIA API
@@ -206,11 +220,11 @@ const deleteUsersAPI = async (emailsToDelete) => {
 
         try {
             // 3. Przygotuj opcje żądania dla `fetch`
+            const idToken = await getAuthToken();
             const requestOptions = {
                 method: 'POST', // lub 'POST', jeśli Twoje API tego wymaga
                 headers: {
                     'Content-Type': 'application/json',
-                    // Dołącz token autoryzacyjny do nagłówka
                     'Authorization': `Bearer ${idToken}`
                 },
                 body: JSON.stringify({
@@ -226,7 +240,7 @@ const deleteUsersAPI = async (emailsToDelete) => {
                 throw new Error(`Błąd API: ${errorData.message || `Status ${response.status}`}`);
             }
 
-            return response.json(); // Zwróć odpowiedź z API
+            return response.json(); 
         } catch (error) {
             console.error("Błąd w deleteUsersAPI:", error);
             // Rzuć błąd dalej, aby został złapany w bloku try...catch przycisku
