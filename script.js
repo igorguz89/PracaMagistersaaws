@@ -81,6 +81,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Event Listeners (tylko jeśli elementy istnieją) ---
 
   // Sprawdzamy, czy jesteśmy na stronie PanelUser.html, sprawdzając istnienie przycisku
+   // Sprawdzamy, czy jesteśmy na stronie PanelUser.html, sprawdzając istnienie tbody
+  if (tbody) {
+    // Pobierz i wyświetl użytkowników zaraz po załadowaniu strony
+    fetchUsers()
+      .then((users) => {
+        userList = users; // Zaktualizuj globalną listę użytkowników
+        renderTable(); // Wyrenderuj tabelę z pobranymi danymi
+        console.log("Lista użytkowników została pomyślnie załadowana.", userList);
+      })
+      .catch((error) => {
+        console.error("Błąd podczas pobierania listy użytkowników:", error);
+        alert(
+          "Nie udało się pobrać listy użytkowników. Sprawdź konsolę, aby uzyskać więcej informacji."
+        );
+      });
+  }
+  
   if (addBtn) {
     addBtn.addEventListener("click", () => {
       modal.style.display = "block";
