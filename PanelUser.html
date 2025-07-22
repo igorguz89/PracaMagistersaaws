@@ -3,17 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wykresy Cen Akcji</title>
+    <title>Mass Email Service - Użytkownicy</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="top-bar" id="header">
       <h1>Mass Email Service</h1>
+      <nav class="navbar">
+        <a href="PanelUser.html" class="nav-link active">Zarządzanie Użytkownikami</a>
+        <a href="templates.html" class="nav-link">Zarządzanie Szablonami</a>
+      </nav>
       <div class="outside">
         <div class="inside">
           <div>
-            <button id="signOut">Log out</button>
+            <button id="signOut">Wyloguj</button>
           </div>
           <script type="module">
             import { userManager, signOutRedirect } from "./main.js";
@@ -29,7 +33,7 @@
 
     <main id="main">
       <div>
-        Hello:
+        Witaj:
         <pre id="email"></pre>
         Access token:
         <pre id="access-token"></pre>
@@ -40,17 +44,24 @@
       </div>
 
       <script type="module">
-        import { userManager, signOutRedirect } from "./main.js";
+        import { userManager } from "./main.js";
 
-        userManager.signinCallback().then(function (user) {
-          document.getElementById("email").textContent = user.profile?.email;
-          document.getElementById("access-token").textContent =
-            user.access_token;
-          document.getElementById("id-token").textContent = user.id_token;
-          document.getElementById("refresh-token").textContent =
-            user.refresh_token;
+        userManager.signinRedirectCallback().then(function (user) { // Corrected: signinRedirectCallback
+          if (user) { // Check if user exists after callback
+            document.getElementById("email").textContent = user.profile?.email;
+            document.getElementById("access-token").textContent =
+              user.access_token;
+            document.getElementById("id-token").textContent = user.id_token;
+            document.getElementById("refresh-token").textContent =
+              user.refresh_token;
+          }
+        }).catch(error => {
+            console.warn("No user found or error during signin callback:", error);
+            // Handle cases where user is not logged in or session expired
+            // For example, redirect to login or show appropriate message
         });
       </script>
+
       <h1>Lista użytkowników</h1>
       <button id="addBtn">Dodaj</button>
       <button id="deleteBtn">Usuń zaznaczone</button>
@@ -65,11 +76,9 @@
           </tr>
         </thead>
         <tbody id="userTableBody">
-          <!-- Wiersze będą dodawane tutaj -->
-        </tbody>
+          </tbody>
       </table>
 
-      <!-- Modal -->
       <div id="userModal" class="modal">
         <div class="modal-content">
           <span class="close" id="closeModal">&times;</span>
@@ -82,6 +91,6 @@
       </div>
     </main>
 
-    <script type="module" src="script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

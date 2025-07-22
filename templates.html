@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mass Email Service - Szablony</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top-bar" id="header">
+      <h1>Mass Email Service</h1>
+      <nav class="navbar">
+        <a href="PanelUser.html" class="nav-link">Zarządzanie Użytkownikami</a>
+        <a href="templates.html" class="nav-link active">Zarządzanie Szablonami</a>
+      </nav>
+      <div class="outside">
+        <div class="inside">
+          <div>
+            <button id="signOut">Wyloguj</button>
+          </div>
+          <script type="module">
+            import { userManager, signOutRedirect } from "./main.js";
+            document
+              .getElementById("signOut")
+              .addEventListener("click", async () => {
+                await signOutRedirect();
+              });
+          </script>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <h1>Zarządzanie Szablonami E-mail</h1>
+
+      <div class="template-section">
+        <h3>Wgraj nowy szablon HTML</h3>
+        <input type="file" id="templateFileUpload" accept=".html" />
+        <button id="uploadTemplateBtn">Wgraj szablon</button>
+        <p id="uploadStatus"></p>
+      </div>
+
+      <hr />
+
+      <h3>Istniejące Szablony</h3>
+      <table id="templatesTable">
+        <thead>
+          <tr>
+            <th>Nazwa pliku</th>
+            <th>Rozmiar</th>
+            <th>Ostatnia modyfikacja</th>
+            <th>Akcje</th>
+          </tr>
+        </thead>
+        <tbody id="templateTableBody">
+          </tbody>
+      </table>
+    </main>
+
+    <script src="templates.js"></script> </body>
+</html>
