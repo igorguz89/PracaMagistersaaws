@@ -1,4 +1,4 @@
-
+import { userManager, signOutRedirect } from "./main.js";  
 document.addEventListener('DOMContentLoaded', () => {
     const templateFileUpload = document.getElementById('templateFileUpload');
     const uploadTemplateBtn = document.getElementById('uploadTemplateBtn');
