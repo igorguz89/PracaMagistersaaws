@@ -308,62 +308,7 @@ const deleteUsersAPI = async (emailsToDelete) => {
 
 ///////////////wgrywanie tamplate
 ///////////////wgrywanie tamplate
- uploadTemplateBtn.addEventListener('click', async () => {
-        const file = templateFileUpload.files[0];
-        if (!file) {
-            uploadStatus.textContent = 'Proszę wybrać plik HTML do wgrania.';
-            uploadStatus.style.color = 'red';
-            return;
-        }
 
-        if (file.type !== 'text/html') {
-            uploadStatus.textContent = 'Proszę wgrać plik HTML (.html).';
-            uploadStatus.style.color = 'red';
-            return;
-        }
-
-        uploadStatus.textContent = 'Wgrywanie pliku...';
-        uploadStatus.style.color = 'blue';
-
-        try {
-            const idToken = await getAuthToken(); 
-            
-
-            
-            // --- that triggers a Lambda function to handle S3 uploads.          ---
-            const UPLOAD_API_URL = 'https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/POSTTAMPLATE'; 
-
-            const formData = new FormData();
-            formData.append('templateFile', file); // Append the file to form data
-            formData.append('fileName', file.name); // Send file name separately if needed by backend
-
-            const response = await fetch(UPLOAD_API_URL, {
-                method: 'POST', 
-                headers: {
-                    'Authorization': `Bearer ${idToken}`, // Send authorization token
-                    // 'Content-Type': 'multipart/form-data' is usually set automatically by fetch when using FormData
-                },
-                body: formData, 
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                uploadStatus.textContent = `Plik ${file.name} wgrany pomyślnie!`;
-                uploadStatus.style.color = 'green';
-                console.log('Upload successful:', result);
-                loadTemplates(); // Refresh the list of templates
-            } else {
-                const errorData = await response.json();
-                uploadStatus.textContent = `Błąd podczas wgrywania: ${errorData.message || response.statusText}`;
-                uploadStatus.style.color = 'red';
-                console.error('Upload failed:', errorData);
-            }
-        } catch (error) {
-            uploadStatus.textContent = `Wystąpił błąd sieci lub autoryzacji: ${error.message}`;
-            uploadStatus.style.color = 'red';
-            console.error('Network/Auth error during upload:', error);
-        }
-    });
 
 
 
