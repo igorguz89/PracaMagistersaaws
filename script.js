@@ -330,14 +330,13 @@ const deleteUsersAPI = async (emailsToDelete) => {
 
             // --- IMPORTANT: This URL needs to point to your API Gateway endpoint ---
             // --- that triggers a Lambda function to handle S3 uploads.          ---
-            const UPLOAD_API_URL = 'YOUR_S3_UPLOAD_API_GATEWAY_URL'; // <-- REPLACE THIS
-
+            const UPLOAD_API_URL = 'https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/POSTTAMPLATE';
             const formData = new FormData();
             formData.append('templateFile', file); // Append the file to form data
             formData.append('fileName', file.name); // Send file name separately if needed by backend
 
             const response = await fetch(UPLOAD_API_URL, {
-                method: 'POST', // Or PUT, depending on your API Gateway method
+                method: 'POST', 
                 headers: {
                     'Authorization': `Bearer ${idToken}`, // Send authorization token
                     // 'Content-Type': 'multipart/form-data' is usually set automatically by fetch when using FormData
