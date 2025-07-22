@@ -8,10 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModalBtn = document.getElementById("closeModal");
   const saveUserBtn = document.getElementById("saveUser");
   const tbody = document.getElementById("userTableBody");
-  const templateFileUpload = document.getElementById('templateFileUpload');
-  const uploadTemplateBtn = document.getElementById('uploadTemplateBtn');
-  const uploadStatus = document.getElementById('uploadStatus');
-  const templateTableBody = document.getElementById('templateTableBody');
+  
   
   
 
@@ -306,10 +303,10 @@ const deleteUsersAPI = async (emailsToDelete) => {
 });	
 
 
-///////////////wgrywanie tamplate
-///////////////wgrywanie tamplate
 
+ 
 
+  
 
 
 
