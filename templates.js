@@ -1,4 +1,4 @@
-import { userManager as Menager, signOutRedirect as SignOutRedirect} from "./main.js";  
+import { userManager, signOutRedirect } from "./main.js";  
 document.addEventListener('DOMContentLoaded', () => {
     const templateFileUpload = document.getElementById('templateFileUpload');
     const uploadTemplateBtn = document.getElementById('uploadTemplateBtn');
@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
 // Funkcja pobierajaca token zalogowanego uzytkownika
 const getAuthToken = async () => {
-    const user = await Menager.getUser();
+    const user = await userManager.getUser();
     if (user && !user.expired) {
       return user.id_token;
     }
     // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
     alert("Twoja sesja wygasła lub nie jesteś zalogowany. Proszę zalogować się ponownie.");
-    await Menager.SigninRedirect();
+    await userManager.signinRedirect();
     throw new Error("Użytkownik nie jest uwierzytelniony lub sesja wygasła.");
   };
     
