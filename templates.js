@@ -85,7 +85,7 @@ const getAuthToken = async () => {
 
             // --- IMPORTANT: This URL needs to point to your API Gateway endpoint ---
             // --- that triggers a Lambda function to list S3 objects.          ---
-            const LIST_TEMPLATES_API_URL = 'https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/GETTEMPLATE'; // <-- REPLACE THIS
+            const LIST_TEMPLATES_API_URL = 'https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/GETTEMPLATE';
 
             const response = await fetch(LIST_TEMPLATES_API_URL, {
                 method: 'GET',
@@ -135,5 +135,40 @@ const getAuthToken = async () => {
     };
 
     // Initial load of templates when the page loads
+   
+    // --- Funkcja do obsługi usuwania szablonów ---
+    const handleDeleteTemplate = async (event) => {
+        const templateKey = event.target.dataset.key;
+        if (!confirm(`Czy na pewno chcesz usunąć szablon "${templateKey}"?`)) {
+            return;
+        }
+
+        try {
+           const idToken = await getAuthToken();
+
+            const DELETE_TEMPLATE_API_URL = `https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/DELETETEMPLATE/${encodeURIComponent(templateKey)}`;
+
+            const response = await fetch(DELETE_TEMPLATE_API_URL, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            });
+
+            if (response.ok) {
+                alert(`Szablon ${templateKey} usunięty pomyślnie.`);
+                loadTemplates();
+            } else {
+                const errorData = await response.json();
+                alert(`Błąd podczas usuwania szablonu: ${errorData.message || response.statusText}`);
+                console.error('Delete failed:', errorData);
+            }
+        } catch (error) {
+            alert(`Wystąpił błąd sieci lub autoryzacji podczas usuwania: ${error.message}`);
+            console.error('Network/Auth error during template deletion:', error);
+        }
+    };
+
+    // Inicjalne ładowanie szablonów po załadowaniu strony
     loadTemplates();
 });
