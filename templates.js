@@ -164,15 +164,16 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const idToken = await getAuthToken();
 
-      const DELETE_TEMPLATE_API_URL = `https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/DELETETEMPLATE/${encodeURIComponent(
-        templateKey
-      )}`;
+      const DELETE_TEMPLATE_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/DELETETEMPLATE"
 
       const response = await fetch(DELETE_TEMPLATE_API_URL, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
+        body: JSON.stringify({ 
+                keyToDelete: templateKey,
+            }),
       });
 
       if (response.ok) {
