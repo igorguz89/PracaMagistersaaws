@@ -29,19 +29,6 @@
       </div>
     </header>
     <main>
-      <div>
-        <button id="signIn">Sign In</button>
-      </div>
-
-      <script type="module">
-        import { userManager } from "./main.js";
-
-        document
-          .getElementById("signIn")
-          .addEventListener("click", async () => {
-            await userManager.signinRedirect();
-          });
-      </script>
       <div class="container_index">
         <h1 class="reminder">Zaloguj się</h1>
       </div>

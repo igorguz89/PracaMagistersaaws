@@ -39,9 +39,7 @@ const getAuthToken = async () => {
 
         try {
             const idToken = await getAuthToken(); 
-            
-
-            
+ 
             // --- that triggers a Lambda function to handle S3 uploads.          ---
             const UPLOAD_API_URL = 'https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/POSTTAMPLATE'; 
 
@@ -52,12 +50,14 @@ const getAuthToken = async () => {
             const response = await fetch(UPLOAD_API_URL, {
                 method: 'POST', 
                 headers: {
-                    'Authorization': `Bearer ${idToken}`, // Send authorization token
-                    // 'Content-Type': 'multipart/form-data' is usually set automatically by fetch when using FormData
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`, 
+                    
                 },
                 body: formData, 
             });
 
+        
             if (response.ok) {
                 const result = await response.json();
                 uploadStatus.textContent = `Plik ${file.name} wgrany pomyślnie!`;
@@ -81,16 +81,16 @@ const getAuthToken = async () => {
     const loadTemplates = async () => {
         templateTableBody.innerHTML = '<tr><td colspan="4">Ładowanie szablonów...</td></tr>';
         try {
-            const authData = await getAuthTokenAndGroups();
-            const idToken = authData.idToken;
+            const idToken = await getAuthToken();
 
             // --- IMPORTANT: This URL needs to point to your API Gateway endpoint ---
             // --- that triggers a Lambda function to list S3 objects.          ---
-            const LIST_TEMPLATES_API_URL = 'YOUR_S3_LIST_API_GATEWAY_URL'; // <-- REPLACE THIS
+            const LIST_TEMPLATES_API_URL = 'https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/GETTEMPLATE'; // <-- REPLACE THIS
 
             const response = await fetch(LIST_TEMPLATES_API_URL, {
                 method: 'GET',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`,
                 },
             });
@@ -131,42 +131,6 @@ const getAuthToken = async () => {
         } catch (error) {
             templateTableBody.innerHTML = `<tr><td colspan="4" style="color:red;">Wystąpił błąd sieci lub autoryzacji podczas ładowania szablonów: ${error.message}</td></tr>`;
             console.error('Network/Auth error during template load:', error);
-        }
-    };
-
-    // --- Function to handle template deletion ---
-    const handleDeleteTemplate = async (event) => {
-        const templateKey = event.target.dataset.key;
-        if (!confirm(`Czy na pewno chcesz usunąć szablon "${templateKey}"?`)) {
-            return;
-        }
-
-        try {
-            const authData = await getAuthTokenAndGroups();
-            const idToken = authData.idToken;
-
-            // --- IMPORTANT: This URL needs to point to your API Gateway endpoint ---
-            // --- that triggers a Lambda function to delete S3 objects.          ---
-            const DELETE_TEMPLATE_API_URL = `YOUR_S3_DELETE_API_GATEWAY_URL/${encodeURIComponent(templateKey)}`; // <-- REPLACE THIS
-
-            const response = await fetch(DELETE_TEMPLATE_API_URL, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${idToken}`,
-                },
-            });
-
-            if (response.ok) {
-                alert(`Szablon ${templateKey} usunięty pomyślnie.`);
-                loadTemplates(); // Refresh the list
-            } else {
-                const errorData = await response.json();
-                alert(`Błąd podczas usuwania szablonu: ${errorData.message || response.statusText}`);
-                console.error('Delete failed:', errorData);
-            }
-        } catch (error) {
-            alert(`Wystąpił błąd sieci lub autoryzacji podczas usuwania: ${error.message}`);
-            console.error('Network/Auth error during template deletion:', error);
         }
     };
 
