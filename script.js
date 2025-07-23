@@ -56,7 +56,7 @@ const getAuthToken = async () => {
 // --- Logika API ---
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
     const fetchUsers = async () => {
-    const GET_USERS_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/GET_DATA/dev";
+    const GET_USERS_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/GET_DATA";
 
     try {
         // 2. Przygotuj opcje żądania, dołączając nagłówek autoryzacji
@@ -155,7 +155,7 @@ const getAuthToken = async () => {
     };
 
     return fetch(
-      "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/POST/dev",
+      "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/POST",
       requestOptions
     ).then((response) => {
       if (!response.ok) {
@@ -219,7 +219,7 @@ const getAuthToken = async () => {
 ///FUNKCJA DO USUWANIA API
 const deleteUsersAPI = async (emailsToDelete) => {
         // 1. Zdefiniuj pełny adres URL swojego endpointu API
-        const DELETE_API_URL = "https://d17qh5vn82.execute-api.eu-north-1.amazonaws.com/DeleteUsers/Lambda_Delete_DynamoDB_EmailRecord";
+        const DELETE_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/Delete_Users";
 
         try {
             // 3. Przygotuj opcje żądania dla `fetch`
