@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const DELETE_TEMPLATE_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/DELETETEMPLATE"
 
       const response = await fetch(DELETE_TEMPLATE_API_URL, {
-        method: "GET",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
