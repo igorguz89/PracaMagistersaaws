@@ -59,11 +59,14 @@ const getAuthToken = async () => {
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
     const fetchUsers = async () => {
     try {
+        // 1. Pobierz token uwierzytelniający
+        const idToken = await getAuthToken();
         // 2. Przygotuj opcje żądania, dołączając nagłówek autoryzacji
         const requestOptions = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
             }
         };
 
@@ -133,34 +136,32 @@ const getAuthToken = async () => {
   });
 
 
-// --- Logika API ---
+// --- Logika API --- do zapisywania uzytkownika
 
-  const callAPI = (user) => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const raw = JSON.stringify({
-      email: user.email,
-      imie: user.firstName,
-      nazwisko: user.lastName,
-    });
+  const callAPI = async (user) => {
+    const idToken = await getAuthToken();
 
     const requestOptions = {
       method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${idToken}`
+      },
+      body: JSON.stringify({
+        email: user.email,
+        imie: user.firstName,
+        nazwisko: user.lastName,
+      }),
     };
 
-    return fetch(
-      apiConfig.postUser,
-      requestOptions
-    ).then((response) => {
-      if (!response.ok) {
-        throw new Error(`Błąd HTTP! Status: ${response.status}`);
-      }
-      return response.json(); 
-    });
+    const response = await fetch(apiConfig.postUser, requestOptions);
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({})); // Jeśli treść nie jest JSON-em
+      const errorMessage = errorData.message || `Błąd HTTP! Status: ${response.status}`;
+      throw new Error(errorMessage);
+    }
+    return response.json();
   };
 
 
@@ -171,7 +172,7 @@ const getAuthToken = async () => {
       const email = document.getElementById("emailUser").value.trim();
 
       if (firstName && lastName && email) {
-        const newUser = { firstName, lastName, email, status: 'active' };
+        const newUser = { firstName, lastName, email , status: 'active'};
 
         // 1. Wywołaj API
         callAPI(newUser)
