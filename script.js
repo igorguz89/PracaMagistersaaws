@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <td>${user.firstName}</td>
       <td>${user.lastName}</td>
       <td>${user.email}</td>
-      <td>${'active'}</td>
+      <td>${user.status}</td>
     `;
     tbody.appendChild(row);
   };
@@ -171,7 +171,7 @@ const getAuthToken = async () => {
       const email = document.getElementById("emailUser").value.trim();
 
       if (firstName && lastName && email) {
-        const newUser = { firstName, lastName, email };
+        const newUser = { firstName, lastName, email, status: 'active' };
 
         // 1. Wywołaj API
         callAPI(newUser)
