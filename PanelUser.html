@@ -46,8 +46,8 @@
       <script type="module">
         import { userManager } from "./main.js";
 
-        userManager.signinRedirectCallback().then(function (user) { // Corrected: signinRedirectCallback
-          if (user) { // Check if user exists after callback
+        userManager.signinRedirectCallback().then(function (user) {
+          if (user) { 
             document.getElementById("email").textContent = user.profile?.email;
             document.getElementById("access-token").textContent =
               user.access_token;
@@ -57,8 +57,7 @@
           }
         }).catch(error => {
             console.warn("No user found or error during signin callback:", error);
-            // Handle cases where user is not logged in or session expired
-            // For example, redirect to login or show appropriate message
+            
         });
       </script>
 
@@ -73,6 +72,7 @@
             <th>Imię</th>
             <th>Nazwisko</th>
             <th>Email</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody id="userTableBody">

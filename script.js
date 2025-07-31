@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <td>${user.firstName}</td>
       <td>${user.lastName}</td>
       <td>${user.email}</td>
+      <td>${user.status}</td>
     `;
     tbody.appendChild(row);
   };
@@ -82,6 +83,7 @@ const getAuthToken = async () => {
                 firstName: apiUser.Imie,
                 lastName: apiUser.Nazwisko,
                 email: apiUser.ID,
+                status: apiUser.Status,
             }));
         } else {
             throw new Error("Odpowiedź API nie zawierała oczekiwanego pola 'body' w formacie string.");
@@ -93,8 +95,6 @@ const getAuthToken = async () => {
     }
   };
   
-
-  // --- Event Listeners (tylko jeśli elementy istnieją) ---
 
   // Sprawdzamy, czy jesteśmy na stronie PanelUser.html
   if (tbody) {
@@ -209,8 +209,6 @@ const getAuthToken = async () => {
       }
     });
   }
-
-   
 
 
 ///FUNKCJA DO USUWANIA API
