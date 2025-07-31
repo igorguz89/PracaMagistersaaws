@@ -64,16 +64,17 @@ export function initializeUserPanel() {
         const data = await response.json();
         console.log("Otrzymano surowe dane z API:", data);
 
-        if (data.body && typeof data.body === "string") {
-            const usersFromApi = JSON.parse(data.body);
-            return usersFromApi.map((apiUser) => ({
+        // Zmiana: API zwraca bezpośrednio tablicę JSON, a nie obiekt z polem 'body'.
+        // Dostosowujemy kod do rzeczywistej struktury odpowiedzi.
+        if (Array.isArray(data)) {
+            return data.map((apiUser) => ({
                 firstName: apiUser.Imie,
                 lastName: apiUser.Nazwisko,
                 email: apiUser.ID,
                 status: apiUser.Status,
             }));
         } else {
-            throw new Error("Odpowiedź API nie zawierała oczekiwanego pola 'body' w formacie string.");
+            throw new Error("Odpowiedź API nie jest w oczekiwanym formacie (tablica).");
         }
     } catch (error) {
         console.error("Błąd w fetchUsers:", error);
