@@ -32,34 +32,13 @@
     </header>
 
     <main id="main">
-      <div>
+      <!-- Ta sekcja jest opcjonalna, głównie do celów deweloperskich. Możesz ją usunąć. -->
+      <div style="display: none;">
         Witaj:
         <pre id="email"></pre>
-        Access token:
-        <pre id="access-token"></pre>
         ID token:
         <pre id="id-token"></pre>
-        Refresh token:
-        <pre id="refresh-token"></pre>
       </div>
-
-      <script type="module">
-        import { userManager } from "./main.js";
-
-        userManager.signinRedirectCallback().then(function (user) {
-          if (user) { 
-            document.getElementById("email").textContent = user.profile?.email;
-            document.getElementById("access-token").textContent =
-              user.access_token;
-            document.getElementById("id-token").textContent = user.id_token;
-            document.getElementById("refresh-token").textContent =
-              user.refresh_token;
-          }
-        }).catch(error => {
-            console.warn("No user found or error during signin callback:", error);
-            
-        });
-      </script>
 
       <h1>Lista użytkowników</h1>
       <button id="addBtn">Dodaj</button>
@@ -91,6 +70,7 @@
       </div>
     </main>
 
-    <script src="script.js" type="module"></script>
+    <!-- Używamy teraz jednego, centralnego skryptu do inicjalizacji -->
+    <script src="app-init.js" type="module"></script>
   </body>
 </html>

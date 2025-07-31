@@ -1,8 +1,8 @@
 import { userManager, signOutRedirect } from "./main.js";   
 import { apiConfig } from "./api-config.js";
+import { getAuthToken } from "./auth.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  
+export function initializeUserPanel() {
   const addBtn = document.getElementById("addBtn");
   const deleteBtn = document.getElementById("deleteBtn");
   const modal = document.getElementById("userModal");
@@ -10,9 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveUserBtn = document.getElementById("saveUser");
   const tbody = document.getElementById("userTableBody");
   
-  
-  
-
   // Zmienna do przechowywania listy użytkowników 
   let userList = [];
 
@@ -39,19 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tbody.innerHTML = ""; // Wyczyść tabelę
     userList.forEach((user) => renderUserRow(user));
   };
-
-// Funkcja pobierajaca token zalogowanego uzytkownika
-const getAuthToken = async () => {
-    const user = await userManager.getUser();
-    if (user && !user.expired) {
-      return user.id_token;
-    }
-    // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
-    alert("Twoja sesja wygasła lub nie jesteś zalogowany. Proszę zalogować się ponownie.");
-    await userManager.signinRedirect();
-    throw new Error("Użytkownik nie jest uwierzytelniony lub sesja wygasła.");
-  };
-
 
 
 
@@ -99,22 +83,18 @@ const getAuthToken = async () => {
   };
   
 
-  // Sprawdzamy, czy jesteśmy na stronie PanelUser.html
-  if (tbody) {
-    
-    fetchUsers()
-      .then((users) => {
-        userList = users; // Zaktualizuj listę użytkowników
-        renderTable(); // Wyrenderuj tabelę z pobranymi danymi
-        console.log("Lista użytkowników została pomyślnie załadowana.", userList);
-      })
-      .catch((error) => {
-        console.error("Błąd podczas pobierania listy użytkowników:", error);
-        alert(
-          "Nie udało się pobrać listy użytkowników. Sprawdź konsolę, aby uzyskać więcej informacji."
-        );
-      });
-  }
+  // Inicjalne pobranie danych. Nie potrzebujemy już warunku `if (tbody)`,
+  // ponieważ app-init.js gwarantuje, że ta funkcja jest wywoływana tylko na właściwej stronie.
+  fetchUsers()
+    .then((users) => {
+      userList = users; // Zaktualizuj listę użytkowników
+      renderTable(); // Wyrenderuj tabelę z pobranymi danymi
+      console.log("Lista użytkowników została pomyślnie załadowana.", userList);
+    })
+    .catch((error) => {
+      console.error("Błąd podczas pobierania listy użytkowników:", error);
+      alert("Nie udało się pobrać listy użytkowników. Sprawdź konsolę, aby uzyskać więcej informacji.");
+    });
   
   if (addBtn) {
     addBtn.addEventListener("click", () => {
@@ -287,7 +267,7 @@ const deleteUsersAPI = async (emailsToDelete) => {
       }
     });
   }
-});	
+}
 
 
 

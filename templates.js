@@ -1,24 +1,12 @@
 import { userManager, signOutRedirect } from "./main.js";
 import { apiConfig } from "./api-config.js";
-document.addEventListener("DOMContentLoaded", () => {
+import { getAuthToken } from "./auth.js";
+
+export function initializeTemplatesPanel() {
   const templateFileUpload = document.getElementById("templateFileUpload");
   const uploadTemplateBtn = document.getElementById("uploadTemplateBtn");
   const uploadStatus = document.getElementById("uploadStatus");
   const templateTableBody = document.getElementById("templateTableBody");
-
-  // Funkcja pobierajaca token zalogowanego uzytkownika
-  const getAuthToken = async () => {
-    const user = await userManager.getUser();
-    if (user && !user.expired) {
-      return user.id_token;
-    }
-    // Jeśli nie ma użytkownika lub sesja wygasła, przekieruj do logowania.
-    alert(
-      "Twoja sesja wygasła lub nie jesteś zalogowany. Proszę zalogować się ponownie."
-    );
-    await userManager.signinRedirect();
-    throw new Error("Użytkownik nie jest uwierzytelniony lub sesja wygasła.");
-  };
 
   // --- Function to handle file upload ---
   uploadTemplateBtn.addEventListener("click", async () => {
@@ -184,4 +172,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicjalne ładowanie szablonów po załadowaniu strony
   loadTemplates();
-});
+}
