@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <td>${user.firstName}</td>
       <td>${user.lastName}</td>
       <td>${user.email}</td>
-      <td>${user.status}</td>
+      <td>${'active'}</td>
     `;
     tbody.appendChild(row);
   };
