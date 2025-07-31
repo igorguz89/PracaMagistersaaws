@@ -1,7 +1,8 @@
 import { userManager, signOutRedirect } from "./main.js";   
-// Używamy DOMContentLoaded, aby mieć pewność, że cały HTML jest załadowany, zanim uruchomimy skrypt.
+import { apiConfig } from "./api-config.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Pobieramy elementy, które są specyficzne dla PanelUser.html
+  
   const addBtn = document.getElementById("addBtn");
   const deleteBtn = document.getElementById("deleteBtn");
   const modal = document.getElementById("userModal");
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   
 
-  // Zmienna do przechowywania listy użytkowników (jako "single source of truth")
+  // Zmienna do przechowywania listy użytkowników 
   let userList = [];
 
 
@@ -21,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Funkcja do renderowania pojedynczego wiersza w tabeli
   const renderUserRow = (user) => {
     const row = document.createElement("tr");
-    // Używamy atrybutu data-* do przechowywania unikalnego identyfikatora (email)
+    
     row.setAttribute("data-email", user.email);
     row.innerHTML = `
       <td><input type="checkbox" class="rowCheckbox"></td>
@@ -56,8 +57,6 @@ const getAuthToken = async () => {
 // --- Logika API ---
   // Funkcja do pobierania wszystkich użytkowników przy ładowaniu strony
     const fetchUsers = async () => {
-    const GET_USERS_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/GET_DATA";
-
     try {
         // 2. Przygotuj opcje żądania, dołączając nagłówek autoryzacji
         const requestOptions = {
@@ -68,7 +67,7 @@ const getAuthToken = async () => {
         };
 
         // 3. Wykonaj uwierzytelnione żądanie do API
-        const response = await fetch(GET_USERS_API_URL, requestOptions);
+        const response = await fetch(apiConfig.getUsers, requestOptions);
 
         if (!response.ok) {
             throw new Error(`Błąd HTTP! Status: ${response.status}`);
@@ -97,13 +96,12 @@ const getAuthToken = async () => {
 
   // --- Event Listeners (tylko jeśli elementy istnieją) ---
 
-  // Sprawdzamy, czy jesteśmy na stronie PanelUser.html, sprawdzając istnienie przycisku
-   // Sprawdzamy, czy jesteśmy na stronie PanelUser.html, sprawdzając istnienie tbody
+  // Sprawdzamy, czy jesteśmy na stronie PanelUser.html
   if (tbody) {
-    // Pobierz i wyświetl użytkowników zaraz po załadowaniu strony
+    
     fetchUsers()
       .then((users) => {
-        userList = users; // Zaktualizuj globalną listę użytkowników
+        userList = users; // Zaktualizuj listę użytkowników
         renderTable(); // Wyrenderuj tabelę z pobranymi danymi
         console.log("Lista użytkowników została pomyślnie załadowana.", userList);
       })
@@ -155,13 +153,13 @@ const getAuthToken = async () => {
     };
 
     return fetch(
-      "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/POST",
+      apiConfig.postUser,
       requestOptions
     ).then((response) => {
       if (!response.ok) {
         throw new Error(`Błąd HTTP! Status: ${response.status}`);
       }
-      return response.json(); // Zakładamy, że API zwraca JSON
+      return response.json(); 
     });
   };
 
@@ -186,8 +184,7 @@ const getAuthToken = async () => {
               alertMessage =
                 bodyContent.message || "Operacja zakończona pomyślnie.";
             } catch (e) {
-              // Jeśli parsowanie się nie uda, 'body' może być zwykłym tekstem
-              // lub sama odpowiedź jest wiadomością.
+          
               alertMessage =
                 result.body || result.message || "Użytkownik zapisany!";
             }
@@ -218,14 +215,12 @@ const getAuthToken = async () => {
 
 ///FUNKCJA DO USUWANIA API
 const deleteUsersAPI = async (emailsToDelete) => {
-        // 1. Zdefiniuj pełny adres URL swojego endpointu API
-        const DELETE_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/Delete_Users";
 
         try {
-            // 3. Przygotuj opcje żądania dla `fetch`
+            // 3. Przygotuj opcje żądania 
             const idToken = await getAuthToken();
             const requestOptions = {
-                method: 'POST', // lub 'POST', jeśli Twoje API tego wymaga
+                method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
@@ -235,8 +230,8 @@ const deleteUsersAPI = async (emailsToDelete) => {
                 })
             };
 
-            console.log("Wysyłanie żądania usunięcia na URL:", DELETE_API_URL);
-            const response = await fetch(DELETE_API_URL, requestOptions);
+            console.log("Wysyłanie żądania usunięcia na URL:", apiConfig.deleteUsers);
+            const response = await fetch(apiConfig.deleteUsers, requestOptions);
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: response.statusText }));
@@ -246,7 +241,7 @@ const deleteUsersAPI = async (emailsToDelete) => {
             return response.json(); 
         } catch (error) {
             console.error("Błąd w deleteUsersAPI:", error);
-            // Rzuć błąd dalej, aby został złapany w bloku try...catch przycisku
+            
             throw error;
         }
     };
@@ -266,14 +261,10 @@ const deleteUsersAPI = async (emailsToDelete) => {
       });
 
       if (emailsToDelete.length > 0) {
-        // Dobrą praktyką jest potwierdzenie operacji destrukcyjnej
         if (confirm(`Czy na pewno chcesz usunąć ${emailsToDelete.length} zaznaczonych użytkowników?`)) {
           try {
-            // Wywołaj API i poczekaj na odpowiedź
+          
             const result = await deleteUsersAPI(emailsToDelete);
-
-            // --- SUKCES ---
-            // Logika poniżej wykona się DOPIERO, gdy API odpowie sukcesem.
 
             // 1. Zaktualizuj lokalną listę użytkowników
             userList = userList.filter(
@@ -287,10 +278,7 @@ const deleteUsersAPI = async (emailsToDelete) => {
             alert(result.message || "Użytkownicy zostali pomyślnie usunięci.");
 
           } catch (error) {
-            // --- BŁĄD ---
-            // Logika poniżej wykona się tylko, jeśli API zwróci błąd.
             console.error("Błąd podczas usuwania użytkowników:", error);
-            // Spróbuj wyciągnąć komunikat o błędzie z odpowiedzi API
             const errorMessage = error.response?.data?.message || error.message || "Wystąpił nieznany błąd.";
             alert(`Nie udało się usunąć użytkowników: ${errorMessage}`);
           }
@@ -307,8 +295,3 @@ const deleteUsersAPI = async (emailsToDelete) => {
  
 
   
-
-
-
-
-

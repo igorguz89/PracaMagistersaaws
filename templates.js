@@ -1,4 +1,5 @@
 import { userManager, signOutRedirect } from "./main.js";
+import { apiConfig } from "./api-config.js";
 document.addEventListener("DOMContentLoaded", () => {
   const templateFileUpload = document.getElementById("templateFileUpload");
   const uploadTemplateBtn = document.getElementById("uploadTemplateBtn");
@@ -45,18 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const idToken = await getAuthToken();
 
-        // --- that triggers a Lambda function to handle S3 uploads.          ---
-        const UPLOAD_API_URL =
-          "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/POSTTAMPLATE";
-
-        const response = await fetch(UPLOAD_API_URL, {
+        const response = await fetch(apiConfig.postTemplate, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${idToken}`,
-            "Content-Type": "application/json", // Ważne: wysyłamy JSON
+            "Content-Type": "application/json", 
           },
           body: JSON.stringify({
-            // Wysyłamy JSON
             fileName: fileName,
             fileContent: base64Content,
           }),
@@ -67,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
           uploadStatus.textContent = `Plik ${file.name} wgrany pomyślnie!`;
           uploadStatus.style.color = "green";
           console.log("Upload successful:", result);
-          loadTemplates(); // Refresh the list of templates
+          loadTemplates();
         } else {
           const errorData = await response.json();
           uploadStatus.textContent = `Błąd podczas wgrywania: ${
@@ -85,19 +81,13 @@ document.addEventListener("DOMContentLoaded", () => {
     reader.readAsDataURL(file);
   });
 
-  // --- Function to load and display existing templates ---
   const loadTemplates = async () => {
     templateTableBody.innerHTML =
       '<tr><td colspan="4">Ładowanie szablonów...</td></tr>';
     try {
       const idToken = await getAuthToken();
 
-      // --- IMPORTANT: This URL needs to point to your API Gateway endpoint ---
-      // --- that triggers a Lambda function to list S3 objects.          ---
-      const LIST_TEMPLATES_API_URL =
-        "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/GETTEMPLATE";
-
-      const response = await fetch(LIST_TEMPLATES_API_URL, {
+      const response = await fetch(apiConfig.getTemplates, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -106,19 +96,19 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        const templates = await response.json(); // Assuming your Lambda returns a list of template objects
-        templateTableBody.innerHTML = ""; // Clear loading message
+        const templates = await response.json(); 
+        templateTableBody.innerHTML = ""; 
 
         if (templates && templates.length > 0) {
           templates.forEach((template) => {
             const row = templateTableBody.insertRow();
-            // Assuming template object has properties like 'Key', 'Size', 'LastModified' from S3 ListObjectsV2
-            const fileName = template.Key.split("/").pop(); // Get just the file name
+            
+            const fileName = template.Key.split("/").pop();
             const lastModified =
               new Date(template.LastModified).toLocaleDateString() +
               " " +
               new Date(template.LastModified).toLocaleTimeString();
-            const fileSizeKB = (template.Size / 1024).toFixed(2); // Size in KB
+            const fileSizeKB = (template.Size / 1024).toFixed(2); 
 
             row.innerHTML = `
                             <td>${fileName}</td>
@@ -129,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             </td>
                         `;
           });
-          // Add event listeners for delete buttons
+          
           document
             .querySelectorAll(".delete-template-btn")
             .forEach((button) => {
@@ -152,8 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Initial load of templates when the page loads
-
   // --- Funkcja do obsługi usuwania szablonów ---
   const handleDeleteTemplate = async (event) => {
     const templateKey = event.target.dataset.key;
@@ -164,9 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const idToken = await getAuthToken();
 
-      const DELETE_TEMPLATE_API_URL = "https://gie4hdwqw8.execute-api.eu-north-1.amazonaws.com/prod/DELETETEMPLATE"
-
-      const response = await fetch(DELETE_TEMPLATE_API_URL, {
+      const response = await fetch(apiConfig.deleteTemplate, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${idToken}`,
